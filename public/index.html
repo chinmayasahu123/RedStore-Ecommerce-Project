@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redstore - Your Ultimate Shopping Destination</title>
+  <link rel="stylesheet" href="CSS/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+</head>
+<body>
+
+  <!-- Custom Modal Structure (for general alerts) -->
+  <div id="customModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" id="modalCloseButton">&times;</span>
+      <p id="modalMessage"></p>
+    </div>
+  </div>
+
+  <!-- Product Quick View Modal Structure -->
+  <div id="productQuickViewModal" class="modal">
+    <div class="modal-content product-quick-view-content">
+      <span class="close-button" id="quickViewCloseButton">&times;</span>
+      <div class="quick-view-details">
+        <div class="quick-view-image-container">
+          <img id="quickViewImage" src="" alt="Product Image">
+        </div>
+        <div class="quick-view-info">
+          <h3 id="quickViewName"></h3>
+          <p class="quick-view-price" id="quickViewPrice"></p>
+          <p id="quickViewDescription"></p>
+          <button class="btn" id="quickViewAddToCartBtn">Add to Cart 🛒</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="header" id="home">
+    <div class="container">
+
+      <div class="navbar">
+      <div class="logo">
+      <img src="images/logo.png" width="125px" alt="Redstore Logo">
+      </div>
+
+  
+
+
+
+        <!-- 🔍 Search Bar Block Start -->
+<div class="search-bar-wrapper">
+  <div class="search-bar-container">
+    <input 
+      type="text" 
+      id="searchBar" 
+      placeholder="Search products..." 
+      oninput="handleSearch(this.value)"
+    />
+    <i class="fas fa-search search-icon"></i>
+    <ul id="suggestionList"></ul>
+  </div>
+</div>
+<!-- 🔍 Search Bar Block End -->
+  
+  <nav>
+  <nav class="desktop-nav"></nav>
+  <ul id="menuItems">
+  <li><a href="#home">Home</a></li>
+  <li><a href="#products">Products</a></li>
+  <li><a href="#about">About</a></li>
+  <li><a href="#contact">Contact</a></li>
+  <li><a href="login.html">Logout</a></li>
+  </ul>
+  </nav>
+        
+        <!-- Cart icon with ID for JS interaction -->
+         <div class="mobile-icons"></div>
+        <div class="cart-container">
+        <img src="images/cart.png" width="30px" height="30px" id="cartIcon" alt="Shopping Cart">
+        <span id="cartCountBadge" class="cart-count-badge">0</span>
+        </div>
+        <img src="images/menu.png" class="menu-icon" onclick="menutoggle()" alt="Menu Icon">
+      </div>
+
+     <!-- Stylish Cart Modal -->
+        <div id="cartModal" class="modal">
+        <div class="modal-content cart-modal-content">
+        <span class="close-button" id="closeCartBtn">&times;</span>
+        <h2>Your Cart</h2>
+        <form action="index.html" method="get"></form>
+        <div id="cartItemsList" class="cart-items-list"></div>
+        <p class="cart-total" id="cartTotal"></p>
+         <button class="btn checkout-btn" onclick="window.location.href='checkout.html'">Checkout</button>      
+         
+        </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <span id="toastMessage"></span>
+        <button id="undoBtn" class="undo-btn">Undo</button>
+      </div>
+
+      <!-- Hero Section Carousel -->
+      <div class="hero-carousel">
+        <div class="carousel-slide active">
+          <div class="row">
+            <div class="col-2">
+              <h1>Give Your Workout <br> A New Style</h1>
+              <p>Success isn't always about greatness, it's about consistency. Consistent <br>hard work gains success. Greatness will come.</p>
+              <a href="#products" class="btn">Explore Now &#8594;</a>
+            </div>
+            <div class="col-2">
+              <img src="images/image1.png" alt="Workout Gear">
+            </div>
+          </div>
+        </div>
+        <div class="carousel-slide active">
+          <div class="row">
+            <div class="col-2">
+              <h1>Unleash Your Potential <br> With Our Best Gear</h1>
+              <p>Discover the latest trends and high-quality products designed to elevate your performance and style.</p>
+              <a href="#products" class="btn">Shop Latest &#8594;</a>
+            </div>
+            <div class="col-2">
+            <img src="images/image223.png" alt="Special Offer" class="special-offer-img">
+            </div>
+
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="row">
+            <div class="col-2">
+              <h1>Exclusive Deals <br> Just For You!</h1>
+              <p>Don't miss out on our limited-time offers. Get the best products at unbeatable prices.</p>
+              <a href="#products" class="btn">View Deals &#8594;</a>
+            </div>
+            <div class="col-2">
+              <img src="images/image33.png" alt="Special Offer">
+            </div>
+          </div>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why Choose Us Section -->
+  <div class="why-choose-us">
+    <div class="small-container">
+      <h2 class="title">Why Choose Us?</h2>
+      <div class="row">
+        <div class="col-3-feature">
+          <i class="fas fa-truck-fast"></i>
+          <h3>Enjoy Fast & Free Shipping</h3>
+          <p>Enjoy quick delivery on all orders, right to your doorstep.</p>
+        </div>
+        <div class="col-3-feature">
+          <i class="fas fa-award"></i>
+          <h3>Quality Products Guaranteed</h3>
+          <p>We offer only the highest quality products for your satisfaction.</p>
+        </div>
+        <div class="col-3-feature support-trigger" onclick="openSupportModal()">
+  <i class="fas fa-headset"></i>
+  <h3>24/7 Customer Support</h3>
+  <p>📞 +91-9876543210 | ✉️ help@redstore.com<br><span style="text-decoration:underline; color:#4f46e5; cursor:pointer;">Click here to raise an issue</span></p>
+</div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories Section -->
+  <div class="categories">
+    <div class="small-container">
+      <div class="row">
+        <div class="col-3">
+          <img src="images/category-1.jpg" alt="Category 1">
+        </div>
+        <div class="col-3">
+          <img src="images/category-2.jpg" alt="Category 2">
+        </div>
+        <div class="col-3">
+          <img src="images/category-3.jpg" alt="Category 3">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Products Section -->
+  <div class="small-container" id="products">
+    <h2 class="title">Featured Products</h2>
+    <div class="row">
+      <!-- Added data attributes for Quick View Modal -->
+      <div class="col-4" data-name="Red Printed T-shirt" data-price="599" data-description="A comfortable and stylish red printed t-shirt made from premium cotton. Perfect for casual wear or light workouts. Available in various sizes for a perfect fit.">
+        <img src="images/product-1.jpg" alt="Red Printed T-shirt">
+        <h4>Red Printed T-shirt</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star-half-alt"></i>
+        </div>
+        <p>₹599</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+      <div class="col-4" data-name="Black Sports Shoes" data-price="1599" data-description="High-performance black sports shoes designed for optimal comfort and durability. Features breathable mesh and responsive cushioning. Ideal for running and training.">
+        <img src="images/product-2.jpg" alt="Black Sports Shoes">
+        <h4>Black Sports Shoes</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star-half-alt"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+        </div>
+        <p>₹1599</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+      <div class="col-4" data-name="Grey Sports Pant" data-price="299" data-description="Versatile grey sports pants offering flexibility and comfort. Made with moisture-wicking fabric, perfect for any athletic activity or casual wear.">
+        <img src="images/product-3.jpg" alt="Grey Sports Pant">
+        <h4>Grey Sports Pant</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star-half-alt"></i>
+          <i class="far fa-star"></i>
+        </div>
+        <p>₹299</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+      <div class="col-4" data-name="Navy Blue T-shirt" data-price="999" data-description="A classic navy blue t-shirt made from soft, breathable fabric. A wardrobe essential that combines style and comfort.">
+        <img src="images/product-4.jpg" alt="Navy Blue T-shirt">
+        <h4>Navy Blue T-shirt</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>
+        </div>
+        <p>₹999</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+    </div>
+
+    <h2 class="title">Latest Products</h2>
+    <div class="row">
+      <div class="col-4" data-name="Casual Shoe Mens" data-price="599" data-description="Stylish and comfortable casual shoes for men, perfect for daily wear. Features a durable sole and a modern design.">
+        <img src="images/product-5.jpg" alt="Casual Shoe Mens">
+        <h4>Casual Shoe Mens</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star-half-alt"></i>
+        </div>
+        <p>₹599</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+      <div class="col-4" data-name="Black Puma T-shirt" data-price="799" data-description="Official Puma black t-shirt, designed for athletes and casual wearers. Offers superior comfort and a sleek look.">
+        <img src="images/product-6.jpg" alt="Black Puma T-shirt">
+        <h4>Black Puma T-shirt</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+        </div>
+        <p>₹799</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+      <div class="col-4" data-name="HRX Socks" data-price="199" data-description="High-quality HRX athletic socks, providing excellent support and breathability for all your activities.">
+        <img src="images/product-7.jpg" alt="HRX Socks">
+        <h4>HRX Socks</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star-half-alt"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+        </div>
+        <p>₹199</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+      <div class="col-4" data-name="Black Fossil Watch" data-price="2999" data-description="Elegant black Fossil watch, a timeless accessory for any occasion. Features a durable strap and precise timekeeping.">
+        <img src="images/product-8.jpg" alt="Black Fossil Watch">
+        <h4>Black Fossil Watch</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <p>₹2999</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4" data-name="Roadster Watch" data-price="1299" data-description="A rugged and stylish Roadster watch, perfect for adventure seekers. Water-resistant and built to last.">
+        <img src="images/product-9.jpg" alt="Roadster Watch">
+        <h4>Roadster Watch</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star-half-alt"></i>
+          <i class="far fa-star"></i>
+        </div>
+        <p>₹1299</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+      <div class="col-4" data-name="Black HRX Shoe" data-price="1899" data-description="HRX black athletic shoes, offering superior grip and support for high-intensity workouts. Lightweight and comfortable.">
+        <img src="images/product-10.jpg" alt="Black HRX Shoe">
+        <h4>Black HRX Shoe</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+        </div>
+        <p>₹1899</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+      <div class="col-4" data-name="Grey Nike Shoe" data-price="2199" data-description="Iconic grey Nike shoes, combining classic style with modern comfort. Perfect for sports or everyday fashion.">
+        <img src="images/product-11.jpg" alt="Grey Nike Shoe">
+        <h4>Grey Nike Shoe</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star-half-alt"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+        </div>
+        <p>₹2199</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+      <div class="col-4" data-name="Black Jogger Pant" data-price="499" data-description="Comfortable black jogger pants, ideal for lounging or light exercise. Soft fabric and a relaxed fit.">
+        <img src="images/product-12.jpg" alt="Black Jogger Pant">
+        <h4>Black Jogger Pant</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <p>₹499</p>
+        <button class="btn quick-view-btn">Quick View</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offer Section (Used as About Section) -->
+  <div class="offer" id="about">
+    <div class="small-container">
+      <div class="row">
+        <div class="col-2">
+          <img src="images/exclusive.png" class="offer-img" alt="Exclusive Offer">
+        </div>
+        <div class="col-2">
+          <p>Exclusively Available on Redstore</p>
+          <h1>Smart Band 4</h1>
+          <small>The Mi Smart Band 4 features a 39.9% larger (than Mi Band 3) AMOLED color full-touch display, with adjustable brightness, so everything is clear as can be.</small>
+          <a href="javascript:void(0);" onclick="buyNowSmartBand()" class="btn">Buy Now &#8594;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Specifications Section -->
+  <div class="product-specifications" id="specifications">
+    <div class="small-container">
+      <h2 class="title">Product Specifications</h2>
+      <div class="specification-table">
+        <table>
+          <tr>
+            <th>Feature</th>
+            <th>Details</th>
+          </tr>
+          <tr>
+            <td>Material</td>
+            <td>100% Cotton</td>
+          </tr>
+          <tr>
+            <td>Size</td>
+            <td>S, M, L, XL</td>
+          </tr>
+          <tr>
+            <td>Color</td>
+            <td>Red, Blue, Black</td>
+          </tr>
+          <tr>
+            <td>Warranty</td>
+            <td>6 Months</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonial Section -->
+  <div class="testimonial">
+    <div class="small-container">
+      <h2 class="title">What Our Customers Say</h2>
+      <div class="row">
+        <div class="col-3">
+          <i class="fas fa-quote-left"></i>
+          <p>"The service was exceptional! Fast delivery and great customer support. Highly recommend!"</p>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+          </div>
+          <img src="images/user-1.png" alt="User 1">
+          <h3>Sean Parker</h3>
+        </div>
+        <div class="col-3">
+          <i class="fas fa-quote-left"></i>
+          <p>Quality products at affordable prices. Will definitely shop here again</p>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+            <i class="far fa-star"></i>
+          </div>
+          <img src="images/user-2.png" alt="User 2">
+          <h3>Mike Smith</h3>
+        </div>
+        <div class="col-3">
+          <i class="fas fa-quote-left"></i>
+          <p>Outstanding experience from start to finish. Exceeded all my expectations.</p>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+          <img src="images/user-3.png" alt="User 3">
+          <h3>Mabel Joe</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Videos & Reviews Section -->
+  <div class="video-section" id="videos">
+    <div class="small-container">
+        <h2 class="title">Product Videos & Reviews</h2>
+        <div class="row">
+            <div class="col-3">
+                <div class="video-container">
+                    <iframe
+                        src="https://www.youtube.com/embed/UV-j3tsZQJk?autoplay=1&mute=1"
+                        title="Xiaomi Smart Band 10 – The Best Budget Fitness Tracker of 2025?"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <h3>Xiaomi Smart Band 10 Review</h3>
+                <p>An in-depth look at the features and performance of the latest budget fitness tracker.</p>
+                <div class="rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="far fa-star"></i>
+              </div>
+            </div>
+
+            <div class="col-3">
+                <div class="video-container">
+                    <iframe
+                        src="https://www.youtube.com/embed/NJBxI-loe9g?autoplay=1&mute=1"
+                        title="Samsung Galaxy Z Flip 7 Unboxing & Quick Review"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <h3>Samsung Galaxy Z Flip 7 Unboxing</h3>
+                <p>First impressions and a quick review of Samsung's new foldable smartphone with latest Version.</p>
+                <div class="rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="far fa-star"></i>
+              </div>
+            </div>
+
+            <div class="col-3">
+                <div class="video-container">
+                    <iframe
+                        src="https://www.youtube.com/embed/zLqo7gxYhgU?autoplay=1&mute=1"
+                        title="BEST Fitness Tracker Tier List (2025 Edition)"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <h3>Fitness Tracker Tier List Smart watch 2025</h3>
+                <p>A comprehensive comparison and ranking of the best fitness trackers available this year.</p>
+                <div class="rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="far fa-star"></i>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+  <!-- Top Brands Section -->
+  <div class="brands">
+    <div class="small-container">
+      <h2 class="title">Our Top Brands</h2>
+      <div class="row">
+        <div class="col-5">
+          <img src="images/logo-godrej.png" alt="Godrej Logo">
+        </div>
+        <div class="col-5">
+          <img src="images/logo-oppo.png" alt="Oppo Logo">
+        </div>
+        <div class="col-5">
+          <img src="images/logo-coca-cola.png" alt="Coca-Cola Logo">
+        </div>
+        <div class="col-5">
+          <img src="images/logo-paypal.png" alt="PayPal Logo">
+        </div>
+        <div class="col-5">
+          <img src="images/logo-philips.png" alt="Philips Logo">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Us Section -->
+  <div class="contact-us" id="contact">
+    <div class="small-container">
+      <h2 class="title">Contact Us</h2>
+      <div class="row">
+        <div class="col-2 contact-info">
+          <h3>Get in Touch</h3>
+          <p><i class="fas fa-map-marker-alt"></i> 123 Redstore Street, City, Country</p>
+          <p><i class="fas fa-envelope"></i> info@redstore.com</p>
+          <p><i class="fas fa-phone"></i> +123 456 7890</p>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="col-2 contact-form-container">
+          <form class="contact-form">
+            <input type="text" name="from_name" placeholder="Your Name" required>
+            <input type="email" name="from_email" placeholder="Your Email" required>
+            <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+           <button type="submit" class="btn">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Newsletter Section -->
+  <div class="newsletter">
+    <div class="container">
+      <h2>Stay Updated with Redstore!</h2>
+      <p>Subscribe to our newsletter for exclusive offers, latest product updates, and more.</p>
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit" class="btn">Subscribe</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="footer-col-1">
+          <h3>Download Our App</h3>
+          <p>Download App for Android and iOS mobile phone.</p>
+          <div class="app-logo">
+            <img src="images/play-store.png" alt="Play Store">
+            <img src="images/app-store.png" alt="App Store">
+          </div>
+        </div>
+        <div class="footer-col-2">
+          <img src="images/logo-white.png" alt="Redstore White Logo">
+          <p>Our Purpose Is To Sustainably Make the pleasure and Benefits of Sports Accessible to the many.</p>
+        </div>
+        <div class="footer-col-3">
+          <h3>Useful Links</h3>
+          <ul>
+            <li>Coupons</li>
+            <li>Blog Post</li>
+            <li>Return Policy</li>
+            <li>Join Affiliate</li>
+          </ul>
+        </div>
+        <div class="footer-col-4">
+          <h3>Follow us</h3>
+          <ul>
+            <li>Facebook</li>
+            <li>Twitter</li>
+            <li>Instagram</li>
+            <li>Youtube</li>
+          </ul>
+        </div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright 2025 Redstore. All rights reserved.</p>
+    </div>
+  </div>
+  
+<!-- Customer Support Modal -->
+<div id="supportModal" class="modal">
+  <div class="modal-content support-form-content">
+    <span class="close-button" onclick="closeSupportModal()">&times;</span>
+    <h2 class="form-title">Raise a Support Request</h2>
+    <form id="supportForm">
+      <label>Email Address</label>
+      <input type="email" id="supportEmail" required placeholder="Enter your email">
+
+      <label>Select a Problem</label>
+      <select id="supportIssue" required>
+        <option value="">-- Choose an issue --</option>
+        <option>Order not received</option>
+        <option>Payment failure</option>
+        <option>Product damaged</option>
+        <option>Return request</option>
+        <option>Other issue</option>
+      </select>
+
+      <label>Additional Details</label>
+      <textarea id="supportMessage" rows="4" placeholder="Describe your problem..." required></textarea>
+
+      <button type="submit" class="btn">Submit Request</button>
+    </form>
+  </div>
+</div>
+
+<!-- Notification Box -->
+<div id="supportNotification" class="notification">
+  <i class="fas fa-check-circle"></i>
+  <span id="notificationMessage">Your request has been submitted!</span>
+</div>
+
+
+<script>
+  function openSupportModal() {
+    document.getElementById("supportModal").style.display = "flex";
+  }
+
+  function closeSupportModal() {
+    document.getElementById("supportModal").style.display = "none";
+  }
+
+  // Close modal if clicked outside
+  window.onclick = function(event) {
+    const modal = document.getElementById("supportModal");
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  }
+
+  document.getElementById("supportForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("supportEmail").value.trim();
+    const issue = document.getElementById("supportIssue").value;
+    const message = document.getElementById("supportMessage").value.trim();
+
+    if (email && issue && message) {
+      document.getElementById("notificationMessage").textContent = `✅ Your issue "${issue}" has been received.`;
+      showSupportNotification();
+      this.reset();
+      closeSupportModal();
+    }
+  });
+
+  function showSupportNotification() {
+    const notify = document.getElementById("supportNotification");
+    notify.style.display = "flex";
+    setTimeout(() => {
+      notify.style.display = "none";
+    }, 4000);
+  }
+</script>
+<script src="script.js"></script>
+<script src="backend/server.js"></script>
+
+
+<!-- Live Order Notification -->
+<div id="liveOrder" class="live-order-popup">
+  🛒 <span id="orderText">Someone from Delhi just bought a Combo T-shirt Pack</span>
+</div>
+</div>
+<script>
+  function buyNowSmartBand() {
+    const product = {
+      name: "Smart Band 4",
+      price: 1999,
+      quantity: 1
+    };
+
+    // Replace cart with only this product
+    localStorage.setItem("cartItems", JSON.stringify([product]));
+
+    // Redirect to checkout
+    window.location.href = "checkout.html";
+  }
+</script>
+</body>
+</html>

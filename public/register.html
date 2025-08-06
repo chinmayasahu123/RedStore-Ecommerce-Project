@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="CSS/auth.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="form-container">
+    <form action="login.html" method="get">
+      <h2>Register</h2>
+
+      <!-- Username -->
+      <input type="text" placeholder="Username" required>
+
+      <!-- Email with validation -->
+      <input type="email" placeholder="Email" required>
+
+      <!-- Password with pattern -->
+      <input type="password" placeholder="Create Password" 
+        pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$" 
+        title="Password must be at least 8 characters, include one letter, one number, and one special character." 
+        required>
+
+      <!-- Confirm Password -->
+      <input type="password" placeholder="Confirm Password" required>
+
+      <!-- Phone Number -->
+      <input type="tel" placeholder="Phone Number" 
+        pattern="[0-9]{10}" 
+        title="Enter a 10-digit phone number" 
+        required>
+
+      <!-- Address Dropdown -->
+      <select required>
+        <option value="">Select Address</option>
+        <option value="Kolkata, West Bengal">Kolkata, West Bengal</option>
+        <option value="Cuttack, Odisha">Cuttack, Odisha</option>
+        <option value="Bengaluru, Karnatak">Bengaluru, Karnataka</option>
+        <option value="Hyderabad, Telangana">Hyderabad, Telangana</option>Maharashtra
+        <option value="Mumbai, Maharashtra">Mumbai, Maharashtra</option>
+      </select>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn">Register</button>
+
+      <p class="text">Already have an account? <a href="login.html">Login</a></p>
+    </form>
+  </div>
+  <script>
+function showNotification(message, type, redirect = null) {
+  const banner = document.createElement('div');
+  banner.className = `notification-banner ${type}`;
+  banner.innerHTML = `
+    <span>${message}</span>
+    <button onclick="this.parentElement.remove()">OK</button>
+  `;
+  document.body.appendChild(banner);
+
+  if (redirect) {
+    banner.querySelector('button').addEventListener('click', () => {
+      window.location.href = redirect;
+    });
+  }
+}
+
+document.querySelector("form").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const name = document.querySelector('input[type="text"]').value;
+  const email = document.querySelector('input[type="email"]').value;
+  const password = document.querySelectorAll('input[type="password"]')[0].value;
+  const confirmPassword = document.querySelectorAll('input[type="password"]')[1].value;
+  const phoneNumber = document.querySelector('input[type="tel"]').value;
+  const address = document.querySelector('select').value;
+
+  if (password !== confirmPassword) {
+    showNotification("⚠️ Passwords do not match!", "error");
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:3000/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, password, phoneNumber, address }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Registration failed');
+    }
+
+    showNotification("✅ Registered successfully! Redirecting to login...", "success", "login.html");
+  } catch (error) {
+    showNotification(`❌ ${error.message}`, "error");
+  }
+});
+</script>
+
+
+
+

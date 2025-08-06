@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Your Professional E-commerce Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7fafc; /* Lighter background for a cleaner look */
+    }
+    .main-container {
+      background-color: #ffffff;
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .input-field {
+      outline: none;
+      transition: all 0.2s ease-in-out;
+    }
+    .input-field:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+    .btn-primary {
+      background-image: linear-gradient(to right, #6d28d9, #4f46e5);
+      transition: all 0.3s ease-in-out;
+    }
+    .btn-primary:hover {
+      background-image: linear-gradient(to right, #4f46e5, #6d28d9);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
+    }
+    .payment-option.selected {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
+      transform: scale(1.02);
+    }
+    .payment-option {
+      transition: all 0.2s ease-in-out;
+    }
+    #toast {
+        display: none;
+        right: -100%;
+        transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #toast.show {
+        display: flex;
+        right: 1.5rem;
+    }
+    #coupon-input:disabled {
+      cursor: not-allowed;
+      background-color: #e2e8f0;
+    }
+    /* Simple animation for dynamic forms */
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Main Container -->
+  <div class="min-h-screen flex items-center justify-center p-4 lg:p-8">
+    <div class="w-full max-w-6xl rounded-2xl main-container overflow-hidden lg:grid lg:grid-cols-3">
+      
+      <!-- Checkout Form Section (Left & Center Columns) -->
+      <div class="lg:col-span-2 p-6 sm:p-10 lg:p-12">
+        <header class="mb-8 lg:mb-10 text-center lg:text-left">
+          <h1 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-2">Secure Checkout</h1>
+          <p class="text-gray-500 text-sm lg:text-base">Please provide your details to complete the order.</p>
+        </header>
+
+        <!-- Shipping and Contact Details -->
+        <section class="mb-8 lg:mb-10">
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6 flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 lg:h-8 lg:w-8 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V5H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"></path><path d="M17 9.5h-5M17 13.5h-5"></path></svg>
+            <span>Shipping & Billing</span>
+          </h2>
+          <form id="shippingForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <input type="text" id="name" placeholder="John Doe" required class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg" />
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+              <input type="email" id="email" placeholder="john.doe@example.com" required class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg" />
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              <input type="tel" id="phone" placeholder="9876543210" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" required class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg" />
+            </div>
+            <div>
+              <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+              <input type="text" id="city" placeholder="New York" required class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg" />
+            </div>
+            <div class="md:col-span-2">
+              <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Delivery Address</label>
+              <textarea id="address" placeholder="123 Main Street, Apt 4B" rows="3" required class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg"></textarea>
+            </div>
+          </form>
+        </section>
+
+        <!-- Payment Method Selection -->
+        <section class="mb-8 lg:mb-10">
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6 flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 lg:h-8 lg:w-8 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+            <span>Payment Method</span>
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <!-- Credit Card Option -->
+            <div id="payment-creditCard" class="payment-option bg-white rounded-xl p-4 cursor-pointer border-2 border-transparent hover:border-indigo-400 flex flex-col items-center space-y-2 selected" onclick="showPaymentForm('creditCard', this)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+              <span class="font-medium text-sm text-gray-800 text-center">Credit / Debit Card</span>
+            </div>
+            <!-- UPI Option -->
+            <div id="payment-upi" class="payment-option bg-white rounded-xl p-4 cursor-pointer border-2 border-transparent hover:border-indigo-400 flex flex-col items-center space-y-2" onclick="showPaymentForm('upi', this)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9.4L11 14"></path><path d="M15 9l4-4L15 1"></path><path d="M17 19H3"></path><path d="M19 19H3"></path><path d="M19 19l-4-4"></path><path d="M19 19L15 14"></path></svg>
+              <span class="font-medium text-sm text-gray-800 text-center">UPI</span>
+            </div>
+            <!-- COD Option -->
+            <div id="payment-cod" class="payment-option bg-white rounded-xl p-4 cursor-pointer border-2 border-transparent hover:border-indigo-400 flex flex-col items-center space-y-2" onclick="showPaymentForm('cod', this)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span class="font-medium text-sm text-gray-800 text-center">Cash on Delivery</span>
+            </div>
+
+            <!-- PhonePe -->
+<div id="payment-phonepe" class="payment-option bg-white rounded-xl p-4 cursor-pointer border-2 border-transparent hover:border-indigo-400 flex flex-col items-center space-y-2" onclick="showPaymentForm('phonepe', this)">
+  <img src="images/phonepe.png" onclick="openUPIPopup()" class="w-13 h-13 cursor-pointer transition hover:scale-105" />
+  <span class="font-medium text-sm text-gray-800 text-center">PhonePe</span>
+</div>
+
+<!-- Google Pay -->
+<div id="payment-gpay" class="payment-option bg-white rounded-xl p-4 cursor-pointer border-2 border-transparent hover:border-indigo-400 flex flex-col items-center space-y-2" onclick="showPaymentForm('gpay', this)">
+  <img src="images/gpay.jpeg" onclick="openUPIPopup()"src class="w-13 h-11 cursor-pointer transition hover:scale-105" />
+  <span class="font-medium text-sm text-gray-800 text-center">Google Pay</span>
+</div>
+
+<!-- Paytm -->
+<div id="payment-paytm" class="payment-option bg-white rounded-xl p-4 cursor-pointer border-2 border-transparent hover:border-indigo-400 flex flex-col items-center space-y-2" onclick="showPaymentForm('paytm', this)">
+  <img src="images/paytm.jpeg" onclick="openUPIPopup()" class="w-16 h-16 cursor-pointer transition hover:scale-105" />
+  <span class="font-medium text-sm text-gray-800 text-center">Paytm</span>
+</div>            
+
+          </div>
+          
+          <!-- Dynamic Payment Form Container -->
+          <div id="paymentFormContainer" class="mt-6 animate-fadeIn">
+            <!-- Form will be injected here by JavaScript -->
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Order Summary Section (Right Column) -->
+      <aside class="lg:col-span-1 bg-gray-100 p-6 sm:p-10 lg:p-12 flex flex-col justify-between">
+        <div class="flex-grow">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h2>
+
+          <!-- Cart Items List -->
+          <div id="cartItems" class="space-y-4 max-h-60 overflow-y-auto mb-6 pr-2">
+            <!-- Cart items will be loaded here by JavaScript -->
+          </div>
+
+          <!-- Coupon Code Section -->
+          <div class="border-y border-gray-200 py-6 mb-6">
+            <h3 class="text-lg font-medium text-gray-800 mb-3">Have a coupon?</h3>
+            <div class="flex space-x-2">
+              <input type="text" id="coupon-input" placeholder="Enter coupon code" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg" />
+              <button onclick="applyCoupon()" id="apply-coupon-btn" class="bg-gray-800 text-white font-medium px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200">
+                Apply
+              </button>
+            </div>
+            <p id="coupon-status" class="mt-2 text-sm font-semibold"></p>
+          </div>
+
+          <!-- Order Totals -->
+          <div class="space-y-4">
+            <div class="flex justify-between items-center text-lg font-medium text-gray-700">
+              <span>Subtotal</span>
+              <span id="subtotal" class="font-semibold text-gray-900">₹0.00</span>
+            </div>
+            <div class="flex justify-between items-center text-gray-500">
+              <span>Shipping</span>
+              <span id="shipping" class="font-medium text-gray-600">Free</span>
+            </div>
+            <div class="flex justify-between items-center text-gray-500" id="discount-row" style="display: none;">
+              <span>Discount <span id="discount-label" class="font-bold text-green-600"></span></span>
+              <span id="discount-amount" class="font-medium text-red-500">-₹0.00</span>
+            </div>
+            <div class="flex justify-between items-center text-2xl font-bold text-gray-800 pt-4 border-t-2 border-dashed border-gray-300">
+              <span>Order Total</span>
+              <span id="totalPrice" class="font-extrabold text-3xl text-indigo-600">₹0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Place Order Button -->
+        <button onclick="placeOrder()" class="mt-8 w-full py-4 text-lg font-semibold rounded-lg text-white shadow-lg btn-primary focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50">
+          Place Order
+        </button>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 p-4 bg-green-500 text-white rounded-xl shadow-xl z-50 text-base font-semibold flex items-center space-x-3">
+    <!-- Checkmark SVG Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+    <span>Order placed successfully! Redirecting...</span>
+  </div>
+
+  <!-- Custom Modal for Alerts/Errors -->
+  <div id="customModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-[100]">
+      <div class="bg-white rounded-xl p-8 max-w-sm w-full text-center relative shadow-lg">
+          <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600" onclick="hideCustomModal()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+          <p id="modalMessage" class="text-gray-800 text-lg font-medium"></p>
+          <button class="mt-6 px-6 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700" onclick="hideCustomModal()">OK</button>
+      </div>
+  </div>
+
+
+  <script>
+    // --- Global Variables & Constants ---
+    
+    const VALID_COUPONS = {
+      'SAVE10': { type: 'percent', value: 10, label: '10%' },
+      'FLAT500': { type: 'flat', value: 500, label: '₹500' }
+    };
+    let currentDiscount = 0;
+    let selectedPaymentMethod = 'creditCard';
+
+    // --- DOM Content Loaded Event ---
+window.addEventListener("DOMContentLoaded", () => {
+  // Load real cart items from localStorage
+  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+  if (!cartItems.length) {
+    document.getElementById("cartItems").innerHTML = "<p class='text-center text-gray-500 italic'>🛒 Your cart is empty.</p>";
+    document.getElementById("totalPrice").textContent = "₹0.00";
+  } else {
+    loadCartAndSummary();
+  }
+
+  showPaymentForm('creditCard', document.getElementById('payment-creditCard'));
+});
+
+    
+
+    /**
+     * Shows a modal alert with a custom message.
+     * @param {string} message The message to display.
+     */
+    function showCustomModal(message) {
+      const modal = document.getElementById('customModal');
+      const msgElement = document.getElementById('modalMessage');
+      if (modal && msgElement) {
+        msgElement.textContent = message;
+        modal.style.display = 'flex';
+      }
+    }
+
+    /**
+     * Hides the custom modal.
+     */
+    function hideCustomModal() {
+      const modal = document.getElementById('customModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    /**
+     * Renders cart items and updates the order summary.
+     */
+    function loadCartAndSummary() {
+      const items = JSON.parse(localStorage.getItem("cartItems")) || [];
+      const cartContainer = document.getElementById("cartItems");
+      let subtotal = 0;
+      
+      cartContainer.innerHTML = '';
+
+      if (items.length === 0) {
+        cartContainer.innerHTML = "<p class='text-center text-gray-500 italic'>🛒 Your cart is empty.</p>";
+      } else {
+        items.forEach(item => {
+          const div = document.createElement("div");
+          div.classList.add('flex', 'justify-between', 'items-center', 'py-3', 'border-b', 'border-gray-200', 'last:border-b-0');
+          div.innerHTML = `
+            <div class="flex-grow">
+              <p class="text-sm font-medium text-gray-800">${item.name}</p>
+              <span class="text-xs text-gray-500">Qty: ${item.quantity}</span>
+            </div>
+            <span class="text-base font-semibold text-gray-900">₹${(item.price * item.quantity).toFixed(2)}</span>
+          `;
+          cartContainer.appendChild(div);
+          subtotal += item.price * item.quantity;
+        });
+      }
+      updateOrderSummary(subtotal);
+    }
+    
+    /**
+     * Dynamically updates the order summary section with totals and discounts.
+     * @param {number} subtotal The calculated subtotal of all items.
+     */
+    function updateOrderSummary(subtotal) {
+      const subtotalElement = document.getElementById("subtotal");
+      const discountRow = document.getElementById("discount-row");
+      const discountAmountElement = document.getElementById("discount-amount");
+      const totalPriceElement = document.getElementById("totalPrice");
+      let total = subtotal;
+
+      if (currentDiscount > 0) {
+        total = subtotal - currentDiscount;
+        discountRow.style.display = 'flex';
+        discountAmountElement.textContent = `-₹${currentDiscount.toFixed(2)}`;
+      } else {
+        discountRow.style.display = 'none';
+      }
+
+      subtotalElement.textContent = `₹${subtotal.toFixed(2)}`;
+      totalPriceElement.textContent = `₹${total.toFixed(2)}`;
+    }
+
+    /**
+     * Handles the logic for applying a coupon code.
+     */
+    function applyCoupon() {
+      const couponInput = document.getElementById('coupon-input');
+      const couponStatus = document.getElementById('coupon-status');
+      const applyBtn = document.getElementById('apply-coupon-btn');
+      const discountLabel = document.getElementById('discount-label');
+      const couponCode = couponInput.value.toUpperCase().trim();
+      const subtotal = JSON.parse(localStorage.getItem("cartItems") || "[]").reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+      if (!couponCode) {
+        couponStatus.textContent = 'Please enter a coupon code.';
+        couponStatus.classList.remove('text-green-600');
+        couponStatus.classList.add('text-red-500');
+        return;
+      }
+      
+      if (VALID_COUPONS[couponCode]) {
+        const coupon = VALID_COUPONS[couponCode];
+        if (coupon.type === 'percent') {
+          currentDiscount = subtotal * (coupon.value / 100);
+        } else if (coupon.type === 'flat') {
+          currentDiscount = coupon.value;
+        }
+        discountLabel.textContent = `(${coupon.label} Off)`;
+        couponStatus.textContent = 'Coupon applied successfully!';
+        couponStatus.classList.remove('text-red-500');
+        couponStatus.classList.add('text-green-600');
+        couponInput.disabled = true;
+        applyBtn.disabled = true;
+        applyBtn.textContent = 'Applied';
+        
+      } else {
+        currentDiscount = 0;
+        couponStatus.textContent = 'Invalid coupon code.';
+        couponStatus.classList.remove('text-green-600');
+        couponStatus.classList.add('text-red-500');
+        couponInput.disabled = false;
+        applyBtn.disabled = false;
+        applyBtn.textContent = 'Apply';
+      }
+      updateOrderSummary(subtotal);
+    }
+    
+    /**
+     * Renders a specific payment form based on the user's selection
+     * and highlights the selected option.
+     * @param {string} method The selected payment method ('creditCard', 'upi', 'cod', 'phonepe', 'gpay', 'paytm', 'supermoney').
+     * @param {HTMLElement} element The HTML element of the selected option.
+     */
+    function showPaymentForm(method, element) {
+      const formContainer = document.getElementById('paymentFormContainer');
+      selectedPaymentMethod = method;
+      
+      // Deselect all options
+      document.querySelectorAll('.payment-option').forEach(option => {
+          option.classList.remove('selected');
+      });
+      // Select the clicked element
+      if (element) {
+          element.classList.add('selected');
+      }
+
+      let html = '';
+      if (method === 'creditCard') {
+        html = `
+          <form id="creditCardForm" class="space-y-4 animate-fadeIn">
+            <div>
+              <label for="cardNumber" class="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
+              <input type="text" id="cardNumber" placeholder="xxxx-xxxx-xxxx-xxxx" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <div class="w-full sm:w-1/2">
+                <label for="expiry" class="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                <input type="text" id="expiry" placeholder="MM/YY" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+              </div>
+              <div class="w-full sm:w-1/2">
+                <label for="cvv" class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                <input type="text" id="cvv" placeholder="CVV" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+              </div>
+            </div>
+          </form>
+        `;
+      } else if (method === 'upi') {
+        html = `
+          <form id="upiForm" class="space-y-4 animate-fadeIn">
+            <div>
+              <label for="upiId" class="block text-sm font-medium text-gray-700 mb-1">UPI ID</label>
+              <input type="text" id="upiId" placeholder="yourname@bank" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+            </div>
+          </form>
+        `;
+      } else if (method === 'cod') {
+        html = `
+          <form id="codForm">
+            <div class="p-4 bg-yellow-50 rounded-lg animate-fadeIn">
+              <p class="text-sm font-medium text-yellow-800">You have selected Cash on Delivery. Please keep the exact amount ready for the delivery person.</p>
+            </div>
+          </form>
+        `;
+      } else if (method === 'phonepe') {
+          // Dummy interface for PhonePe
+          html = `
+            <form id="phonepeForm" class="animate-fadeIn">
+              <div class="p-4 bg-purple-50 rounded-lg">
+                <p class="text-sm font-medium text-purple-800">
+                  You have selected PhonePe. A dummy payment request will be initiated when you click 'Place Order'.
+                </p>
+              </div>
+            </form>
+          `;
+      } else if (method === 'gpay') {
+          // Dummy interface for GPay
+          html = `
+            <form id="gpayForm" class="animate-fadeIn">
+              <div class="p-4 bg-blue-50 rounded-lg">
+                <p class="text-sm font-medium text-blue-800">
+                  You have selected GPay. A dummy payment request will be initiated when you click 'Place Order'.
+                </p>
+              </div>
+            </form>
+          `;
+      } else if (method === 'paytm') {
+          // Dummy interface for Paytm
+          html = `
+            <form id="paytmForm" class="animate-fadeIn">
+              <div class="p-4 bg-sky-50 rounded-lg">
+                <p class="text-sm font-medium text-sky-800">
+                  You have selected Paytm. A dummy payment request will be initiated when you click 'Place Order'.
+                </p>
+              </div>
+            </form>
+          `;
+      } else if (method === 'supermoney') {
+          // Dummy interface for SuperMoney
+          html = `
+            <form id="supermoneyForm" class="animate-fadeIn">
+              <div class="p-4 bg-gray-100 rounded-lg">
+                <p class="text-sm font-medium text-gray-800">
+                  You have selected SuperMoney. A dummy payment request will be initiated when you click 'Place Order'.
+                </p>
+              </div>
+            </form>
+          `;
+      }
+      formContainer.innerHTML = html;
+    }
+
+    /**
+     * Simulates placing an order and redirects to the home page.
+     */
+    function placeOrder() {
+      const shippingForm = document.getElementById('shippingForm');
+      if (!shippingForm.checkValidity()) {
+        showCustomModal("Please fill out all shipping details.");
+        return;
+      }
+      
+      let paymentForm = document.getElementById(selectedPaymentMethod + 'Form');
+      if (paymentForm && !paymentForm.checkValidity()) {
+        showCustomModal("Please fill out all payment details.");
+        return;
+      }
+      
+      const toast = document.getElementById("toast");
+      toast.classList.add("show");
+      
+      // Clear cart items from local storage
+      localStorage.removeItem("cartItems");
+      
+      // Update the cart display to show it's empty
+      loadCartAndSummary();
+
+      // Set a timeout to redirect to the home page after 3 seconds
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 3000);
+    }
+    function placeOrder() {
+  const shippingForm = document.getElementById('shippingForm');
+  if (!shippingForm.checkValidity()) {
+    showCustomModal("Please fill out all shipping details.");
+    return;
+  }
+
+  let paymentForm = document.getElementById(selectedPaymentMethod + 'Form');
+  if (paymentForm && !paymentForm.checkValidity()) {
+    showCustomModal("Please fill out all payment details.");
+    return;
+  }
+
+  // Show payment processing overlay
+  const overlay = document.getElementById("processingOverlay");
+  overlay.style.display = "flex"; // Show overlay
+  const audio = document.getElementById("processingSound");
+audio.currentTime = 0;
+audio.play().catch((e) => {
+  console.warn("Audio play blocked by browser:", e);
+});
+
+
+  setTimeout(() => {
+    overlay.style.display = "none"; // Hide overlay
+
+    // Show toast
+    const toast = document.getElementById("toast");
+    toast.classList.add("show");
+
+    // Clear cart and reload summary
+    localStorage.removeItem("cartItems");
+    loadCartAndSummary();
+
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 3000);
+  }, 3000);
+}
+/////////
+
+function openUPIPopup() {
+  document.getElementById("upiPopup").classList.remove("hidden");
+}
+
+function closeUPIPopup() {
+  document.getElementById("upiPopup").classList.add("hidden");
+}
+
+function simulateUPIPayment() {
+  closeUPIPopup();
+
+  const overlay = document.getElementById("processingOverlay");
+  overlay.style.display = "flex";
+
+  const audio = document.getElementById("processingSound");
+  audio.currentTime = 0;
+  audio.play().catch(() => {});
+
+  if (navigator.vibrate) navigator.vibrate([200]);
+
+  setTimeout(() => {
+    overlay.style.display = "none";
+    const toast = document.getElementById("toast");
+    toast.classList.add("show");
+
+    localStorage.removeItem("cartItems");
+    loadCartAndSummary();
+
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 3000);
+  }, 3000);
+}
+
+</script>
+
+  
+<!-- Payment Processing Overlay -->
+<div id="processingOverlay" class="fixed inset-0 bg-white bg-opacity-90 z-[200] hidden items-center justify-center">
+  <div class="text-center animate-fadeIn">
+    <div class="h-12 w-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+    <p class="text-lg font-semibold text-indigo-700">Processing payment...</p>
+  </div>
+</div>
+<audio id="processingSound" preload="auto">
+  <source src="sounds/pop.mp3/pop.mp3">
+</audio>
+
+
+<!-- UPI Simulation Popup -->
+<div id="upiPopup" class="hidden fixed inset-0 bg-black bg-opacity-60 z-[100] flex items-center justify-center">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center relative animate-fadeIn">
+    <h2 class="text-lg font-bold mb-3">Simulated UPI Payment</h2>
+    <p class="text-sm mb-2 text-gray-700">Paying to UPI ID:</p>
+    <p class="text-indigo-600 font-medium mb-4">Redstore@axis</p>
+    <img src="images/qr.jpg" alt="Fake QR" class="w-32 h-32 mx-auto mb-4 rounded-md shadow border" />
+    <button onclick="simulateUPIPayment()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-all">
+      Pay Now
+    </button>
+    <button onclick="closeUPIPopup()" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl font-bold">&times;</button>
+  </div>
+</div>
+
+<!-- 🎆 Cracker Burst Container -->
+<canvas id="crackerCanvas" class="fixed top-0 left-0 w-full h-full z-[9999] pointer-events-none"></canvas>
+
+<!-- 🎆 Cracker Burst Script -->
+<script>
+const canvas = document.getElementById("crackerCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function createBurst(x, y) {
+  const colors = ["#FF6B6B", "#FFD93D", "#6BCB77", "#4D96FF", "#9D4EDD"];
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x, y,
+      angle: Math.random() * 2 * Math.PI,
+      speed: Math.random() * 6 + 2,
+      radius: Math.random() * 3 + 2,
+      alpha: 1,
+      color: colors[Math.floor(Math.random() * colors.length)],
+    });
+  }
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach((p, index) => {
+    p.x += Math.cos(p.angle) * p.speed;
+    p.y += Math.sin(p.angle) * p.speed;
+    p.alpha -= 0.01;
+    if (p.alpha <= 0) {
+      particles.splice(index, 1);
+    } else {
+      ctx.beginPath();
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  });
+
+  if (particles.length > 0) {
+    requestAnimationFrame(animateParticles);
+  }
+}
+
+// Trigger burst in the center on order placed
+function triggerCrackerBurst() {
+  const x = window.innerWidth / 2;
+  const y = window.innerHeight / 2;
+  createBurst(x, y);
+  animateParticles();
+}
+
+// 👇 Hook into placeOrder success (reuse existing)
+const originalPlaceOrder = placeOrder;
+placeOrder = function () {
+  originalPlaceOrder();
+  triggerCrackerBurst();
+};
+</script>
+
+</body>
+</html>
